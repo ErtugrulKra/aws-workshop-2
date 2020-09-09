@@ -16,7 +16,10 @@ This project aims to create a phonebook application web application developed in
 
   - Deploy the app on swarm using `docker compose`. To do so on the `Compose` file;
 
-    - Create a MySQL database service with one replica using the image of `mysql:5.7` and attach a named volume to persist the data of database server.
+    - Create a MySQL database service with one replica using the image of `mysql:5.7`;
+      - attach a named volume to persist the data of database server.
+
+      - attach `init.sql` file to initialize the database using `configs`.
 
     - Configure the app service to;
 
@@ -64,8 +67,6 @@ This project aims to create a phonebook application web application developed in
 
       - Download `docker-compose.yml` file from the repo and deploy application stack on Docker Swarm.
 
-      - Download `init-phonebook-db.py` file from the repo and initialize the app database.
-
     - Create a launch template with `instance profile` for Manager Nodes. Within the `user-data` script;
 
       - Install the python `ec2instanceconnectcli` package for `mssh` command.
@@ -97,15 +98,15 @@ This project aims to create a phonebook application web application developed in
 |
 |----readme.md            # Given to the students (Definition of the project)
 |----cfn-template.yml     # To be delivered by students (Cloudformation template)
-|----init-phonebook-db.py # Given to the students (Database Initialization)
 |----phonebook-app.py     # Given to the students (Python Flask Web Application)
 |----requirements.txt     # Given to the students (List of Flask Modules/Packages)
+|----init.sql             # Given to the students (SQL statements to initialize db)
 |----Dockerfile           # To be delivered by students
 |----docker-compose.yml   # To be delivered by students
 |----templates
-        |----index.html      # Given to the students (HTML template)
-        |----add-update.html # Given to the students (HTML template)
-        |----delete.html     # Given to the students (HTML template)
+|       |----index.html      # Given to the students (HTML template)
+|       |----add-update.html # Given to the students (HTML template)
+|       |----delete.html     # Given to the students (HTML template)
 ```
 
 ## Expected Outcome
