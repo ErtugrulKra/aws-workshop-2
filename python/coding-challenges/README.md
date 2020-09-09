@@ -11,3 +11,5 @@ List of coding challenges within Python workshop as follows;
 - [CC - 008 : Validate Customers with Security Questions](./cc-008-validate-customers-with-security-questions/README.md)
 
 - [CC - 009 : Find the Non-Repeated Values](./cc-009-find-non-repeated-values/README.md)
+
+- [CC - 010 : Check Consecutive Vowels](./cc-010-check-consecutive-vowels/README.md)
