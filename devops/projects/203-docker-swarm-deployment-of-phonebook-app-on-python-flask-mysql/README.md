@@ -5,6 +5,8 @@
 This project aims to create a phonebook application web application developed in Python Flask , deployed with Docker Swarm on Elastic Compute Cloud (EC2) Instances by pulling the app images from the AWS Elastic Container Registry (ECR) repository.
 
 ## Problem Statement
+![Project_203](project-203.png)
+
 
 - Your company has recently started a project that aims to serve as phonebook web application. Your teammates have started to work on the project and developed the UI and backend part of the project and they need your help to deploy the app in development environment.
 
