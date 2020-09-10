@@ -6,6 +6,8 @@ This project aims to create a phonebook application web application developed in
 
 ## Problem Statement
 
+![Project 203](./project-203.png)
+
 - Your company has recently started a project that aims to serve as phonebook web application. Your teammates have started to work on the project and developed the UI and backend part of the project and they need your help to deploy the app in development environment.
 
 - You are, as a cloud engineer, requested to deploy the Phonebook Application in the development environment on Docker Swarm on AWS EC2 Instances using AWS Cloudformation Service to showcase the project. To do that you need to;
