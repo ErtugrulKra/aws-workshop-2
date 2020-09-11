@@ -1,39 +1,35 @@
 # Hands-on Kubernetes-02 : Kubernetes Basic Operations
 
-Purpose of the this hands-on training is to give students the knowledge of basic operations in Kubernetes cluster.
+Purpose of the this hands-on training is to give students the knowledge of basic Kubernetes skills
 
 ## Learning Outcomes
 
 At the end of the this hands-on training, students will be able to;
 
-- Learn basic operations of nodes, podes, deployments, replicasets in Kubernetes
-
-- Learn how to update and rollback deployments in Kubernetes
-
-- Learn uses of namespace in Kubernetes
+- Learn basic kubernetes operations
 
 ## Outline
 
-- Part 1 - Basic Operations in Kubernetes
+- Part 1 - Kubernetes Basic Operations
 
-- Part 2 - Deployment Rolling Update and Rollback in Kubernetes
+- Part 2 - Deployment Rolling Update and Rollback
 
-- Part 3 - Namespaces in Kubernetes
+- Part 3 - Kubernetes Namespaces
 
-## Part 1 - Basic Operations in Kubernetes
+## Part 1 - Kubernetes Basic Operations
 
-- Launch a Kubernetes Cluster of Ubuntu 20.04 with two nodes (one master, one worker) using the [Cloudformation Template to Create Kubernetes Cluster](./cfn-template-to-create-k8s-cluster.yml). *Note: Once the master node up and running, worker node automatically joins the cluster.*
+<b>Note: If you have problem with kubernetes cluster, you can use this link for lesson.</b><br>
 
->*Note: If you have problem with kubernetes cluster, you can use this link for lesson.*
->https://www.katacoda.com/courses/kubernetes/playground
+https://www.katacoda.com/courses/kubernetes/playground
 
-- Check if Kubernetes is running.
+- Check if kubernetes is running.
 
 ```bash
-
+$ kubectl cluster-info
 ```
 
-- Show the names and short names of the supported API resources as shown in the example:
+- Just show the names and shortnames of the supported API resources.
+for example:
 
 |NAME|SHORTNAMES|
 |----|----------|
@@ -45,30 +41,30 @@ At the end of the this hands-on training, students will be able to;
 |services   |svc
 
 ```bash
-
+kubectl api-resources
 ```
 
-- Get the documentation of `Nodes` and its fields.
+- Explain nodes. 
 
 ```bash
-
+kubectl explain nodes
 ```
 
 - View the nodes in the cluster using.
 
 ```bash
-
+$ kubectl get nodes
 ```
 
-- Get the documentation of `Podes` and its fields.
+- Explain pods. 
 
 ```bash
-
+$ kubectl explain pods
 ```
   
-- Create yaml file named `mypod.yaml` and explain fields of it.
+- Create yaml file named mypod.yml and explain fields of it.
 
-```yaml
+```text
 apiVersion: v1
 kind: Pod
 metadata:
@@ -83,45 +79,49 @@ spec:
     - containerPort: 80
 ```
 
-- Create a pod with `kubectl create` command.
+- Use the kubectl create command to create a pod.
 
 ```bash
-
+$ kubectl create -f mypod.yaml
 ```
 
-- List the pods.
+- list the pods
 
 ```bash
-
+$ kubectl get pods
 ```
 
-- List pods in `ps output format` with more information (such as node name).
+- List pods in ps output format with more information (such as node name).
   
 ```bash
-
+$ kubectl get pods -o wide
 ```
 
 - Show details of pod.
 
 ```bash
-
+$ kubectl describe pods/nginx-pod
 ```
 
 - Delete the pod.
 
 ```bash
-
+$ kubectl delete -f mypod.yml
+```
+or
+```bash
+$ kubectl delete pod nginx-pod
 ```
 
-- Get the documentation of `Deployments` and its fields.
+- Explain deployments. 
 
 ```bash
-
+$ kubectl explain deployments
 ```
 
-- Create yaml file named `mydeployment.yaml` and explain fields of it.
+- Create yaml file named mydeployment.yml and explain fields of it.
 
-```yaml
+```text
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -145,253 +145,262 @@ spec:
         - containerPort: 80
 ```
 
-- Create the deployment with `kubectl apply` command.
+- Create the Deployment by running the following command.
   
 ```bash
-
+$ kubectl apply -f mydeployment.yml
 ```
 
-- List the deployments.
+- list the deployments.
 
 ```bash
-
+$ kubectl get deployments
 ```
 
 - List pods with more information.
   
 ```bash
-
+$ kubectl get pods -o wide
 ```
 
 - Show details of deployments.
 
 ```bash
-
+$ kubectl describe deploy/nginx-deployment
 ```
 
 - Print the logs for a container in a pod.
 
 ```bash
-
+$ kubectl logs deploy/nginx-deployment
 ```
 
 - If there is a multi-container pod, we can print logs of one container.
 
 ```bash
-
+$ kubectl logs <PodName> -c <containerName>
 ```
 
-- Execute a command in a container.
+- Execute a command in a container
 
 ```bash
-
+$ kubectl exec <podName> -- date
 ```
 
 ```bash
-
+$ kubectl exec <PodName> -- cat /usr/share/nginx/html/index.html
 ```
 
-- Open a bash shell in a container.
+- Enter into a container.
 
 ```bash
-
+$ kubectl exec -it <PodName> -- bash
 ```
 
-- Get the documentation of `ReplicaSets` and its fields.
+- Explain the ReplicaSets.
 
 ```bash
-
+$ kubectl explain rs
 ```
 
 - List the ReplicaSets.
 
 ```bash
-
+$ kubectl get rs
 ```
 
 - Show details of ReplicaSets.
 
 ```bash
-
+$ kubectl describe rs <rsname>
 ```
 
 - Delete a pod and show new pod is immediately created.
 
 ```bash
-
+$ kubectl delete pod <podname>
+$ kubectl get pods
 ```
 
 - Delete deployments
 
 ```bash
-
+$ kubectl delete deploy <deploymentname>
 ```
 
-## Part 2 - Deployment Rolling Update and Rollback in Kubernetes
+## Part 2 - Deployment Rolling Update and Rollback
 
 - Create a nginx deployment.
 
 ```bash
-
+$ kubectl create deploy mynginx --image=nginx:1.18-alpine
 ```
 
-- List the `Deployment`, `ReplicaSet` and `Pods` of `mynginx` deployment using a label.
+- List the deployment, ReplicaSet and pods of mynginx deployment.
 
 ```bash
-
+$ kubectl get deploy,rs,po -l app=mynginx
 ```
 
 - Scale the deployment up to three replicas.
 
 ```bash
-
+$ kubectl scale deploy mynginx --replicas=3
 ```
 
-- List the `Deployment`, `ReplicaSet` and `Pods` of `mynginx` deployment using a label again and note the name of ReplicaSet.
+- List the deployment, ReplicaSet and pods of mynginx deployment again and note the name of ReplicaSet.
 
 ```bash
-
+$ kubectl get deploy,rs,po -l app=mynginx
 ```
 
 - Describe deployment and note the image of the deployment. In our case, it is nginx:1.18-alpine.
 
 ```bash
-
+$ kubectl describe deploy mynginx
 ```
 
 - View previous rollout revisions.
 
 ```bash
-
+$ kubectl rollout history deploy mynginx
 ```
 
-- Display details with revision number, in our case, is 1. And note name of image.
+- Display detail about the revision via revision number. In our case, is 1. And, note name of image.
 
 ```bash
-
+$ kubectl rollout history deploy mynginx --revision=1
 ```
 
 - Upgrade image.
 
 ```bash
-
+$ kubectl set image deploy mynginx nginx=nginx:1.19-alpine
 ```
 
 - Show the rollout history.
 
 ```bash
-
+$ kubectl rollout history deploy mynginx
 ```
 
 - Display details about the revisions.
 
 ```bash
-
+$ kubectl rollout history deploy mynginx --revision=1
+$ kubectl rollout history deploy mynginx --revision=2
 ```
 
-- List the `Deployment`, `ReplicaSet` and `Pods` of `mynginx` deployment using a label and explain ReplicaSets.
+- List the deployment, ReplicaSet and pods of mynginx deployment and explain ReplicaSets.
 
 ```bash
-
+$ kubectl get deploy,rs,po -l app=mynginx
 ```
 
-- Rollback to `revision 1`.
+- Rollback to revision 1.
 
 ```bash
-
+$ kubectl rollout undo deploy mynginx --to-revision=1
 ```
 
-- Show the rollout history and show that we have revision 2 and 3. Explain that original revision, which is `revision 1`, becomes `revision 3`.
+- Show the rollout history and show that we have revision 2 and 3. And mention that original revision, which is revision 1, becomes revision 3.
 
 ```bash
-
+$ kubectl rollout history deploy mynginx
+$ kubectl rollout history deploy mynginx --revision=2
+$ kubectl rollout history deploy mynginx --revision=3
 ```
 
-- Try to pull up the `revision 1`, that is no longer available.
+- Try to pull up the revision 1, that is no longer available.
 
 ```bash
-
+$ kubectl rollout history deploy mynginx --revision=1
 ```
 
-- List the `Deployment`, `ReplicaSet` and `Pods` of `mynginx` deployment using a label, and explain that the original ReplicaSet has been scaled up back to three and second ReplicaSet has been scaled down to zero.
+- List the deployment, ReplicaSet and pods of mynginx deployment. And, explain that the original ReplicaSet has been scaled up back to three and second ReplicaSet has been scaled down to zero.
 
 ```bash
-
+$ kubectl get deploy,rs,po -l app=mynginx
 ```
-
 - Delete the deployment.
 
 ```bash
-
+$ kubectl delete deploy <deploymentname>
 ```
 
-## Part 3 - Namespaces in Kubernetes
+## Part 3 - Kubernetes Namespaces
 
-- List the current namespaces in a cluster using and explain them. *Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called `namespaces`.*
+Kubernetes supports multiple virtual clusters backed by the same physical cluster. These virtual clusters are called namespaces.
 
-```bash
+- list the current namespaces in a cluster using and explain them.
 
+```shell
+$ kubectl get namespace
+NAME              STATUS   AGE
+default           Active   118m
+kube-node-lease   Active   118m
+kube-public       Active   118m
+kube-system       Active   118m
 ```
 
->### default
->The default namespace for objects with no other namespace
+### default 
+The default namespace for objects with no other namespace
 
->### kube-system
->The namespace for objects created by the Kubernetes system
+### kube-system 
+The namespace for objects created by the Kubernetes system
 
->### kube-public
->This namespace is created automatically and is readable by all users (including those not authenticated). This >namespace is mostly reserved for cluster usage, in case that some resources should be visible and readable >publicly throughout the whole cluster. The public aspect of this namespace is only a convention, not a >requirement.
+### kube-public 
+This namespace is created automatically and is readable by all users (including those not authenticated). This namespace is mostly reserved for cluster usage, in case that some resources should be visible and readable publicly throughout the whole cluster. The public aspect of this namespace is only a convention, not a requirement.
 
->### kube-node-lease
->This namespace for the lease objects associated with each node which improves the performance of the node  heartbeats as the cluster scales.
+### kube-node-lease 
+This namespace for the lease objects associated with each node which improves the performance of the node heartbeats as the cluster scales.
 
-- Create a new YAML file called `my-namespace.yaml` with the following content.
+- Create a new YAML file called my-namespace.yaml with the contents.
 
-```yaml
+```text
 apiVersion: v1
 kind: Namespace
 metadata:
   name: clarus-namespace
 ```
 
-- Create a namespace using the `my-namespace.yaml` file.
+- Run following command.
 
-```bash
-
+```shell
+$ kubectl create -f ./my-namespace.yaml
 ```
 
 - Alternatively, you can create namespace using below command:
 
-```bash
-
+```shell
+$ kubectl create namespace <namespace-name>
 ```
 
 - Create pods in each namespace.
 
-```bash
-
+```shell
+$ kubectl create deployment default-ns --image=nginx
+$ kubectl create deployment clarus-ns --image=nginx  -n=clarus-namespace
 ```
 
-- List the deployments in `default` namespace.
+- list the deployments. 
 
-```bash
-
+```shell
+$ kubectl get deployment
 ```
 
-- List the deployments in `clarus-namespace`.
-
-```bash
-
+```shell
+$ kubectl get deployment -n clarus-namespace
 ```
 
-- List the all deployments.
+- list the all deployments.
 
-```bash
-
+```shell
+$ kubectl get deployment -o wide --all-namespaces
 ```
 
 - Delete the namespace.
 
-```bash
-
+```shell
+$ kubectl delete namespaces clarus-namespace
 ```
