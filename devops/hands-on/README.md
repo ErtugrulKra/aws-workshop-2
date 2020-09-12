@@ -30,3 +30,4 @@ List of hands-on trainings within DevOps workshop as follows;
 
 - [Hands-on Kubernetes-02 : Kubernetes Basic Operations](./kubernetes-02-basic-operations/README.md)
 
+- [Hands-on Kubernetes-03 : Handling Pods, Volumes, Networking and Service Discovery](./kubernetes-03-pods-volumes-networking-service-discovery/README.md)
