@@ -265,10 +265,11 @@ metadata:
 - Create the `development` and `production` namespaces.
 
 ```bash
-
+kubectl apply -f web-flask-development.yaml
+kubectl apply -f web-flask-production.yaml
 ```
 
-- Create `yaml` file named `web-flask-development.yaml` for `development` namespace and explain fields of it.
+- Create `yaml` file named `web_flask_dev.yaml` for `development` namespace and explain fields of it.
 
 ```yaml
 apiVersion: apps/v1
@@ -299,7 +300,7 @@ spec:
         - containerPort: 5000
 ```
 
-- Create `yaml` file named `web-flask-production.yaml` for `production` namespace.
+- Create `yaml` file named `web_flask_prod.yaml` for `production` namespace.
 
 ```yaml
 apiVersion: apps/v1
@@ -333,13 +334,14 @@ spec:
 - Create the apps `development` and `production` Deployments.
   
 ```bash
-
+kubectl apply -f web-flask-development.yaml
+kubectl apply -f web-flask-production.yaml
 ```
 
 - Show the Pods detailed information in all namespaces and learn their IP addresses:
 
 ```bash
-
+kubectl get deployments --all-namespaces
 ```
 
 - We get an output like below.
@@ -377,13 +379,19 @@ spec:
 - Create a `for-ping` pod and log into the container.
 
 ```bash
+kubectl apply -f forping.yaml 
+kubectl exec -it for-ping bash
+
+#You can kubectl get pods --all-namespaces -o wide to get a list of the internal ips of all your running pods. We will use this internal IP to attempt a ping. 
+#172.16.210.166
+
 
 ```
 
 - Get the documentation of `Services` and its fields.
 
 ```bash
-
+kubectl explain svc
 ```
 
 - Create a `web-svc-development.yaml` file with following content and explain fields of it.
@@ -445,13 +453,14 @@ spec:
 - Create the Services.
   
 ```bash
-
+kubectl apply -f web-svc-development.yaml
+kubectl apply -f web-svc-production.yaml
 ```
 
 - List the services.
 
 ```bash
-
+kubectl get svc -o wide --all-namespaces
 ```
 
 ```text
@@ -467,7 +476,7 @@ production    web-flask-svc   NodePort    10.105.28.86    <none>        5000:320
 - Display information about the `web-flask-svc` Service in `production` namespace and note down the `NodePort` of the service which is `32050` in our case.
 
 ```bash
-
+kubectl describe svc web-flask-svc -n production
 ```
 
 ```text
@@ -500,25 +509,25 @@ Kubernetes is constantly evaluating the Service’s label selector against the c
 - Get the documentation of `Endpoints` and its fields.
 
 ```bash
-
+kubectl explain ep
 ```
 
 - List the Endpoints.
 
 ```bash
-
+kubectl get ep -o wide --all-namespaces
 ```
 
 - Scale the deployment up to ten replicas and list the `Endpoints` in development namespace.
 
 ```bash
-
+kubectl scale deploy web-flask-deploy --replicas=10 --namespace=development
 ```
 
 - List the `Endpoints` and explain that the Service has an associated `Endpoint` object with an always-up-to-date list of Pods matching the label selector.
 
 ```bash
-
+kubectl get ep -o wide --all-namespaces
 ```
 
 > Open a browser on any node and explain the `loadbalancing` via browser. (Pay attention to the host ip and node name and note that `host ips` and `endpoints` are same)
