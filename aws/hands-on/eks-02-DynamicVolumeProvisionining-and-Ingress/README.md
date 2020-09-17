@@ -34,11 +34,29 @@ For information on installing or upgrading eksctl, see [Installing or upgrading 
 
 ## Part 1 - Creating the Kubernetes Cluster on EKS
 
-- Create an EKS cluster via eksctl.
+- If needed create ssh-key with commnad `ssh-keygen -f ~/.ssh/id_rsa`
+  
+- Create an EKS cluster via `eksctl`.
 
 ```bash
 $ eksctl create cluster --node-type t3.medium --nodes 1 --nodes-min 1 --nodes-max 2 --name mycluster
+
+or
+
+$ eksctl create cluster \
+ --name my-cluster \
+ --version 1.17 \
+ --region us-east-2 \
+ --nodegroup-name my-nodes \
+ --node-type t3.medium \
+ --nodes 1 \
+ --nodes-min 1 \
+ --nodes-max 2 \
+ --ssh-access \
+ --ssh-public-key  ~/.ssh/id_rsa.pub \
+ --managed
 ```
+
 ## Part 2 - Dynamic Volume Provisionining
 
 - Create a StorageClass with the following settings.
