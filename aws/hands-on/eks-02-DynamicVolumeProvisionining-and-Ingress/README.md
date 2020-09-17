@@ -308,7 +308,7 @@ web-service   NodePort    10.107.136.54   <none>        3000:30634/TCP   4m38s
 ```
 Note the `PORT(S)` difference between `db-service` and `web-service`. Why?
 
-- We can visit http://<public-node-ip>:<node-port> and access the application. Note: Do not forget to open the Port <node-port> in the security group of your node instance.
+- We can visit http://< public-node-ip >:< node-port > and access the application. Note: Do not forget to open the Port <node-port> in the security group of your node instance.
 
 We see the home page. You can add to-do's.
 
