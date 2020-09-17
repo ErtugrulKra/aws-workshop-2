@@ -699,8 +699,7 @@ pod/web-deployment-6d8d8c777b-tgkzc   1/1     Running       0          46m     1
 Now, let's introduce load for to-do web app with load-generator pod as follows (in a couple of terminals):
 ```bash
 $ kubectl exec -it load-generator -- /bin/sh
-/ # while true; do wget -q -O- http://172.17.0.2 > /dev/null ; done  
-while true; do wget -q -O- http://<puplic ip>:<port number of web-service> > /dev/null; done
+/ # while true; do wget -q -O- http://<puplic ip>:<port number of web-service> > /dev/null; done
 ```
 
 Watch table
