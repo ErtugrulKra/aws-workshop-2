@@ -156,20 +156,20 @@ root@test-aws:/#
 
 ## Part 3 - Ingress
 
-> - Download the lesson folder from "https://github.com/clarusway/clarusway-aws-devops-1-20/tree/master/devops/hands-on/kubernetes-04-microservice-deployment-and-autoscaling".
+> - Download the lesson folder from "https://github.com/clarusway/clarusway-aws-devops-1-20/tree/master/aws/hands-on/eks-02-DynamicVolumeProvisionining-and-Ingress".
 
 ```bash
 $ mkdir volume-and-ingress
 $ cd volume-and-ingress/
 $ TOKEN="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-$ FOLDER="https://$TOKEN@raw.githubusercontent.com/clarusway/clarusway-aws-devops-1-20/master/devops/hands-on/kubernetes-04-microservice-deployment-and-autoscaling/"
-$ curl -s --create-dirs -o "/home/ubuntu/microservices/microservices.tar.gz" -L "$FOLDER"microservices-yaml-files.tar.gz
-$ tar -xvf microservices.tar.gz
+$ FOLDER="https://$TOKEN@raw.githubusercontent.com/clarusway/clarusway-aws-devops-1-20/master/aws/hands-on/eks-02-DynamicVolumeProvisionining-and-Ingress/"
+$ curl -s --create-dirs -o "$HOME/ingress/ingress.tar.gz" -L "$FOLDER"ingress-yaml-files.tar.gz
+$ tar -xvf ingress.tar.gz
 ```
 
 The directory structure is as follows:
 ```text
-volume-and-ingress
+ingress-yaml-files
 ├── ingress-service.yaml
 ├── php-apache
 │   └── php-apache.yaml
@@ -308,7 +308,7 @@ web-service   NodePort    10.107.136.54   <none>        3000:30634/TCP   4m38s
 ```
 Note the `PORT(S)` difference between `db-service` and `web-service`. Why?
 
-- We can visit http://<public-node-ip>:<node-port> and access the application. Note: Do not forget to open the Port <node-port> in the security group of your node instance.
+- We can visit http://< public-node-ip>:< node-port > and access the application. Note: Do not forget to open the Port <node-port> in the security group of your node instance. (Do not forget to open related ports.)
 
 We see the home page. You can add to-do's.
 
@@ -389,14 +389,14 @@ web-service          NodePort    10.107.136.54   <none>        3000:30634/TCP   
 
 Let's check what web app presents us.
 
-- On opening browser (http://<public-node-ip>:<node-port>) we see
+- On opening browser (http://< public-node-ip>:< node-port >) we see
 
 ```text
 OK!
 ```
 
 Alternatively, you can use;
-```text
+```bash
 curl <public-worker node-ip>:<node-port>
 OK!
 ```
@@ -410,6 +410,10 @@ Briefly explain ingress and ingress controller. For additional information a few
 - https://banzaicloud.com/blog/k8s-ingress/
   
 - Open the offical [ingress-nginx]( https://kubernetes.github.io/ingress-nginx/deploy/ ) explain the `ingress-controller` installation steps for different architecture.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.35.0/deploy/static/provider/aws/deploy.yaml
+```
 
 - Now, check the contents of the `ingress-service`.
 
@@ -436,10 +440,9 @@ spec:
             backend:
               serviceName: php-apache-service
               servicePort: 80
-
 ```
-Explain the rules part.
 
+- Explain the rules part.
 
 ```bash
 $ kubectl apply -f ingress-service.yaml
@@ -448,8 +451,8 @@ ingress.networking.k8s.io/ingress-service created
 
 ```bash
 $ kubectl get ingress
-NAME              CLASS    HOSTS   ADDRESS      PORTS   AGE
-ingress-service   <none>   *       172.17.0.2   80      31s
+NAME              HOSTS   ADDRESS                                                                            PORTS   AGE
+ingress-service   *       a26be57ce12e64883a5ad050025f2c5b-94ab4c4b033cf5fa.elb.eu-central-1.amazonaws.com   80      2m8s
 ```
 
-On browser, type this ip ( 172.17.0.2 ), you must see the to-do app web page. If you type `http://172.17.0.2/load`, then the apache-php page, "OK!". Notice that we don't use the exposed ports at the services.
+On browser, type this  ( a26be57ce12e64883a5ad050025f2c5b-94ab4c4b033cf5fa.elb.eu-central-1.amazonaws.com ), you must see the to-do app web page. If you type `a26be57ce12e64883a5ad050025f2c5b-94ab4c4b033cf5fa.elb.eu-central-1.amazonaws.com/load`, then the apache-php page, "OK!". Notice that we don't use the exposed ports at the services.
