@@ -64,7 +64,6 @@ hands-on
 │   ├── components.yaml
 │   ├── hpa-php-apache.yaml
 │   └── hpa-web.yaml
-├── ingress-service.yaml
 ├── php-apache
 │   └── php-apache.yaml
 └── to-do
