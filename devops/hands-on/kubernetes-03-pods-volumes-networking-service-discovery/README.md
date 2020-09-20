@@ -34,7 +34,8 @@ At the end of the this hands-on training, students will be able to;
 - Check if Kubernetes is running and nodes are ready.
 
 ```bash
-
+kubectl cluster-info
+kubectl get no
 ```
 
 ## Part 2 - Kubernetes Volume Persistence
@@ -42,13 +43,18 @@ At the end of the this hands-on training, students will be able to;
 - Get the documentation of `PersistentVolume` and its fields. Explain the volumes, types of volumes in Kubernetes and how it differs from the Docker volumes. [Volumes in Kubernetes](https://kubernetes.io/docs/concepts/storage/volumes/)
 
 ```bash
-
+kubectl explain pv
 ```
 
 - Log into the `kube20-worker-1` node, create a `pv-data` directory under home folder, also create an `index.html` file with `Welcome to Kubernetes persistence volume lesson` text and note down path of the `pv-data` folder.
 
 ```bash
-
+mkdir pv-data
+cd pv-data
+echo "Welcome to Kubernetes persistence volume lesson" > index.html
+ls
+pwd
+/home/ubuntu/pv-data
 ```
 
 - Log into `kube20-master` node, create a `clarus-pv.yaml` file using the following content with the volume type of `hostPath` to build a `PersistentVolume` and explain fields.
@@ -73,19 +79,19 @@ spec:
 - Create the PersistentVolume `clarus-pv-vol`.
 
 ```bash
-
+kubectl apply -f clarus-pv.yaml
 ```
 
 - View information about the `PersistentVolume` and notice that the `PersistentVolume` has a `STATUS` of available which means it has not been bound yet to a `PersistentVolumeClaim`.
 
 ```bash
-
+kubectl get pv clarus-pv-vol
 ```
 
 - Get the documentation of `PersistentVolumeClaim` and its fields.
 
 ```bash
-
+kubectl explain pvc
 ```
 
 - Create a `clarus-pv-claim.yaml` file using the following content to create a `PersistentVolumeClaim` and explain fields.
@@ -107,7 +113,7 @@ spec:
 - Create the PersistentVolumeClaim `clarus-pv-claim`.
 
 ```bash
-
+kubectl apply -f clarus-pv-claim.yaml
 ```
 
 > After we create the PersistentVolumeClaim, the Kubernetes control plane looks for a PersistentVolume that satisfies the claim's requirements. If the control plane finds a suitable `PersistentVolume` with the same `StorageClass`, it binds the claim to the volume. Look for details at [Persistent Volumes and Claims](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#introduction)
@@ -115,13 +121,13 @@ spec:
 - View information about the `PersistentVolumeClaim` and show that the `PersistentVolumeClaim` is bound to your PersistentVolume `clarus-pv-vol`.
 
 ```bash
-
+kubectl get pvc clarus-pv-claim
 ```
 
 - View information about the `PersistentVolume` and show that the PersistentVolume `STATUS` changed from Available to `Bound`.
 
 ```bash
-
+kubectl get pv clarus-pv-vol
 ```
 
 - Create a `clarus-pod.yaml` file that uses your PersistentVolumeClaim as a volume using the following content.
@@ -150,43 +156,47 @@ spec:
 - Create the Pod `clarus-pod`.
 
 ```bash
-
+kubectl apply -f clarus-pod.yaml
 ```
 
 - Verify that the Pod is running.
 
 ```bash
-
+kubectl get pod clarus-pod
 ```
 
 - Open a shell to the container running in your Pod.
 
 ```bash
-
+kubectl exec -it clarus-pod -- /bin/bash
 ```
 
 - Verify that `nginx` is serving the `index.html` file from the `hostPath` volume.
 
 ```bash
-
+curl http://localhost/
 ```
 
 - Log into the `kube20-worker-1` node, change the `index.html`.
 
 ```bash
-
+cd pv-data
+echo "Kubernetes Rocks!!!!" > index.html
 ```
 
 - Log into the `kube20-master` node, check if the change is in effect.
 
 ```bash
-
+kubectl exec -it clarus-pod -- /bin/bash
+curl http://localhost/
 ```
 
 - Delete the `Pod`, the `PersistentVolumeClaim` and the `PersistentVolume`.
 
 ```bash
-
+kubectl delete pod clarus-pod
+kubectl delete pvc clarus-pv-claim
+kubectl delete pv clarus-pv-vol
 ```
 
 ## Part 3 - Services, Load Balancing, and Networking in Kubernetes
@@ -265,11 +275,11 @@ metadata:
 - Create the `development` and `production` namespaces.
 
 ```bash
-kubectl apply -f web-flask-development.yaml
-kubectl apply -f web-flask-production.yaml
+kubectl apply -f development-namespace.yaml
+kubectl apply -f production-namespace.yaml
 ```
 
-- Create `yaml` file named `web_flask_dev.yaml` for `development` namespace and explain fields of it.
+- Create `yaml` file named `web-flask-development.yaml` for `development` namespace and explain fields of it.
 
 ```yaml
 apiVersion: apps/v1
@@ -300,7 +310,7 @@ spec:
         - containerPort: 5000
 ```
 
-- Create `yaml` file named `web_flask_prod.yaml` for `production` namespace.
+- Create `yaml` file named `web-flask-production.yaml` for `production` namespace.
 
 ```yaml
 apiVersion: apps/v1
@@ -341,7 +351,7 @@ kubectl apply -f web-flask-production.yaml
 - Show the Pods detailed information in all namespaces and learn their IP addresses:
 
 ```bash
-kubectl get deployments --all-namespaces
+kubectl get pods -o wide --all-namespaces
 ```
 
 - We get an output like below.
@@ -379,13 +389,9 @@ spec:
 - Create a `for-ping` pod and log into the container.
 
 ```bash
-kubectl apply -f forping.yaml 
-kubectl exec -it for-ping bash
-
-#You can kubectl get pods --all-namespaces -o wide to get a list of the internal ips of all your running pods. We will use this internal IP to attempt a ping. 
-#172.16.210.166
-
-
+kubectl apply -f forping.yaml
+kubectl exec -it for-ping -- bash
+root@for-ping:/# ping 172.16.166.180
 ```
 
 - Get the documentation of `Services` and its fields.
@@ -561,7 +567,7 @@ spec:
 - Use kubectl apply to push your configuration changes to the cluster.
 
 ```bash
-
+kubectl apply -f web-svc-development.yaml
 ```
 
 - Reload the page, and see that we can not see the page because of that the Service is selecting on two labels, but the Pods only have one of them. The logic behind this is a Boolean `AND` operation.
@@ -601,7 +607,7 @@ spec:
 - Use kubectl apply to push your configuration changes to the cluster.
 
 ```bash
-
+kubectl apply -f web-flask-development.yaml
 ```
 
 - Reload the page again, and now we can see the page because the `Service` is selecting on two labels and the Pods have all of them.
@@ -642,7 +648,7 @@ spec:
 - Push your configuration changes to the cluster.
 
 ```bash
-
+kubectl apply -f web-flask-development.yaml
 ```
 
 - Reload the page again, and we see the page although the `Pods` have additional labels that the `Service` is not selecting on.
