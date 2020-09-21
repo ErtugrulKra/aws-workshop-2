@@ -6,7 +6,7 @@ This project aims to create a Jenkins pipeline to deploy the Phonebook Applicati
 
 ## Problem Statement
 
-![Project_204](project-204.png)
+![Project_204](Project_204.png)
 
 - Your company has recently started a project that aims to serve as phonebook web application. Your teammates have started to work on the project and developed the UI and backend part of the project and they need your help to deploy the app in development environment.
 
