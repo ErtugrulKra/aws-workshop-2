@@ -10,7 +10,7 @@ pipeline {
             }
         }
         
-        stage('List the images') {
+        stage('create repo') {
             steps {
                 sh """
                 aws ecr create-repository \
