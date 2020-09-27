@@ -439,6 +439,13 @@ grafana-server.service - Grafana instance
 
 - Click ***Add new panel***.
 
+- ***At Query section:***
+
+- Select ***Prometheus***
+
+- Select ***Metrics*** --> ex: Histograms --> `coredns_healt_request_duration_seconds_bucket`
+
+
 ### Add CloudWatch as a Data Source
 
 - Move your cursor to the cog on the side menu which will show you the configuration menu. Click on ***Configuration > Data Sources*** in the side menu and you’ll be taken to the data sources page where you can add and edit data sources.
@@ -472,9 +479,15 @@ grafana-server.service - Grafana instance
 - Click ***Visualization*** (Left Side) and then select ***Gauge***.
 
 - Query Mode : CloudWatch Metrics
+
 - Region : default
+
 - Namespace : AWS/EC2
+
 - Metric Name : CPUUtilization
+
 - Stats : Average
+
 - Dimentions : InstanceId = "Insctance ID"
+
 - Click ***Apply***
