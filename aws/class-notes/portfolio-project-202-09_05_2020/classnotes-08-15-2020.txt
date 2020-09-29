@@ -10,7 +10,7 @@ Session - 1
 Session starts at 11am EST
 
 
-Break until 12.05pm.
+Break until 12.05pm
 
 
 CRUD Operations- Create Read/Retrieve Update Delete
